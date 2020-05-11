@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if messages %}
+<ul class="messages" id="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+<script type="text/javascript">
+    var x = document.getElementById("messages");
+    setTimeout(() => {
+        x.parentNode.removeChild(x);
+    }, 3000);
+</script>
+{% endif %}
   <div class="row">
     <div class="col m-4">
       <h3>{{ page.title }} <small class="text-muted">Last updated {{ page.modified|date:"SHORT_DATETIME_FORMAT" }} by <b>{{ page.author.username }}</b></small></h3>
@@ -10,4 +23,12 @@
       <a href="{% url 'wiki-list-page' %}">Back to List</a>
     </div>
   </div>
+  {% if request.user.is_authenticated %}
+  <form method='POST'>
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <input type="submit" value="Submit">
+  </form>
+  {% endif %}
 {% endblock %}

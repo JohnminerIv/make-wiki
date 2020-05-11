@@ -29,10 +29,13 @@ class Page(models.Model):
         path_components = {'slug': self.slug}
         return reverse('wiki-details-page', kwargs=path_components)
 
-    def save(self, *args, **kwargs):
+    def save(self, update_slug=False, *args, **kwargs):
         """ Creates a URL safe slug automatically when a new a page is created. """
         if not self.pk:
             self.slug = slugify(self.title, allow_unicode=True)
+        if update_slug == True:
+            self.slug = slugify(self.title, allow_unicode=True)
+
 
         # Call save on the superclass.
         return super(Page, self).save(*args, **kwargs)
